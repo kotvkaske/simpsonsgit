@@ -21,6 +21,8 @@ class SimpsonsDataset(Dataset):
     """
     Датасет с картинками, который паралельно подгружает их из папок
     производит скалирование и превращение в торчевые тензоры
+    В качестве files указываем list с windowspath (1,...,n)
+    mode = ['train', 'val', 'test']
     """
 
     def __init__(self, files, mode):
