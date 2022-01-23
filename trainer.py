@@ -10,18 +10,15 @@ else:
 DEVICE = torch.device("cuda")
 
 
-def train(train_files, val_files, model, epochs, batch_size):
+def train(train_dataset, val_dataset, model,  criterion = nn.CrossEntropyLoss(), epochs=10, batch_size=64):
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
     val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
-
     history = []
     log_template = "\nEpoch {ep:03d} train_loss: {t_loss:0.4f} \
     val_loss {v_loss:0.4f} train_acc {t_acc:0.4f} val_acc {v_acc:0.4f}"
 
     with tqdm(desc="epoch", total=epochs) as pbar_outer:
         opt = torch.optim.Adam(model.parameters())
-        criterion = nn.CrossEntropyLoss()
-
         for epoch in range(epochs):
             train_loss, train_acc = fit_epoch(model, train_loader, criterion, opt)
             print("loss", train_loss)
