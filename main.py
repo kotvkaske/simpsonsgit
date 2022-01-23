@@ -42,7 +42,8 @@ DATA_MODES = ['train', 'val', 'test']
 RESCALE_SIZE = 224
 # работаем на видеокарте
 DEVICE = torch.device("cuda")
-
+print(os.listdir())
+os.chdir('../СИМПСОНЫ/')
 TRAIN_DIR = Path('train/simpsons_dataset/')
 TEST_DIR = Path('testset/testset')
 
@@ -60,14 +61,14 @@ from sklearn.model_selection import train_test_split
 
 train_val_labels = [path.parent.name for path in train_val_files]
 train_files, val_files = train_test_split(train_val_files, test_size=0.25,shuffle=True)# \
-val_dataset = SimpsonsDataset(val_files, mode='val')
+val_dataset = SimpsonsDataset(val_files, mode='val',RESCALE_SIZE = RESCALE_SIZE)
 label_encoder = pickle.load(open("label_encoder.pkl", 'rb'))
 from torchvision import transforms, models
 n_classes = len(np.unique(train_val_labels))
 if val_dataset is None:
-    val_dataset = SimpsonsDataset(val_files, mode='val')
+    val_dataset = SimpsonsDataset(val_files, mode='val',RESCALE_SIZE=RESCALE_SIZE)
 
-train_dataset = SimpsonsDataset(train_files, mode='train')
+train_dataset = SimpsonsDataset(train_files, mode='train',RESCALE_SIZE=RESCALE_SIZE)
 # Создаём сеть
 model_vgg16 = models.vgg16(pretrained=True)
 model_vgg16.classifier[6] = nn.Linear(4096,n_classes)

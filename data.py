@@ -25,12 +25,13 @@ class SimpsonsDataset(Dataset):
     mode = ['train', 'val', 'test']
     """
 
-    def __init__(self, files, mode):
+    def __init__(self, files, mode, RESCALE_SIZE):
         super().__init__()
         # список файлов для загрузки
         self.files = sorted(files)
         # режим работы
         self.mode = mode
+        self.RESCALE_SIZE = RESCALE_SIZE
         if self.mode not in DATA_MODES:
             print(f"{self.mode} is not correct; correct modes: {DATA_MODES}")
             raise NameError
@@ -71,6 +72,6 @@ class SimpsonsDataset(Dataset):
             y = label_id.item()
             return x, y
 
-    def _prepare_sample(self, image,RESCALE_SIZE):
-        image = image.resize((RESCALE_SIZE, RESCALE_SIZE))
+    def _prepare_sample(self, image):
+        image = image.resize((self.RESCALE_SIZE, self.RESCALE_SIZE))
         return np.array(image)
