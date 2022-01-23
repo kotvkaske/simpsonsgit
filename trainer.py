@@ -85,3 +85,27 @@ def eval_epoch(model, val_loader, criterion):
     val_loss = running_loss / processed_size
     val_acc = running_corrects.double() / processed_size
     return val_loss, val_acc
+
+
+
+def predict(model, test_loader):
+    with torch.no_grad():
+        logits = []
+
+        for inputs in test_loader:
+            inputs = inputs.to(DEVICE)
+            model.eval()
+            outputs = model(inputs).cpu()
+            logits.append(outputs)
+
+    probs = nn.functional.softmax(torch.cat(logits), dim=-1).numpy()
+    return probs
+
+def predict_one_sample(model, inputs, device=DEVICE):
+    """Предсказание, для одной картинки"""
+    with torch.no_grad():
+        inputs = inputs.to(device)
+        model.eval()
+        logit = model(inputs).cpu()
+        probs = torch.nn.functional.softmax(logit, dim=-1).numpy()
+    return probs
